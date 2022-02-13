@@ -1,6 +1,7 @@
-const dotenv = require('dotenv').config();
-const app = require('./app');
+require('dotenv').config();
 require('./redis/blacklist');
+
+const app = require('./app');
 const port = 3000;
 
 const routes = require('./rotas');
