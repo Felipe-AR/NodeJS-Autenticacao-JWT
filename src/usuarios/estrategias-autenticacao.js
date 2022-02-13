@@ -8,7 +8,7 @@ const { InvalidArgumentError } = require('../erros');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const blacklist = require('../../redis/manipula-blacklist');
+const blocklist = require('../../redis/manipula-blocklist');
 
 function verificaUsuario(usuario) {
   if (!usuario) {
