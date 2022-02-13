@@ -1,8 +1,14 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const bcrypt = require('bcryptjs');
-const { InvalidArgumentError } = require('../erros');
+const BearerStrategy = require('passport-http-bearer').Strategy;
+
 const Usuario = require('../usuarios/usuarios-modelo');
+const { InvalidArgumentError } = require('../erros');
+
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
+const blacklist = require('../../redis/manipula-blacklist');
 
 function verificaUsuario(usuario) {
   if (!usuario) {
@@ -14,6 +20,13 @@ async function verificaSenha(senha, senhaHash) {
   const senhaValida = await bcrypt.compare(senha, senhaHash);
   if (!senhaValida) {
     throw new InvalidArgumentError('E-mail ou senha inválidos');
+  }
+}
+
+async function verificaTokenNaBlackList(token) {
+  const tokenNaBlackList = await blacklist.contemToken(token);
+  if (tokenNaBlackList) {
+    throw new jwt.JsonWebTokenError('Token inválido por logout!');
   }
 }
 
@@ -32,4 +45,19 @@ passport.use(
       done(erro);
     }
   })
+)
+
+passport.use(
+  new BearerStrategy(
+    async (token, done) => {
+      try {
+        await verificaTokenNaBlackList(token);
+        const payload = jwt.verify(token, process.env.CHAVE_JWT);
+        const usuario = await Usuario.buscaPorId(payload.id);
+        done(null, usuario, { token });
+      } catch (erro) {
+        done(erro);
+      }
+    }
+  ),
 )
