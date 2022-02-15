@@ -1,5 +1,7 @@
 require('dotenv').config();
+require('./database');
 require('./redis/blocklist');
+require('./redis/allowlist-refresh-token');
 
 const app = require('./app');
 const port = 3000;
