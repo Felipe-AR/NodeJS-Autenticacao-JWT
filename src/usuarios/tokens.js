@@ -26,6 +26,10 @@ async function verificaTokenNaBlockList(token, nome, blocklist) {
   }
 }
 
+function invalidaTokenJWT(token, blocklist) {
+  return blocklist.adiciona(token);
+}
+
 async function verificaTokenJWT(token, nome, blocklist) {
   await verificaTokenNaBlockList(token, nome, blocklist);
   const { id } = jwt.verify(token, process.env.CHAVE_JWT);
@@ -37,6 +41,10 @@ async function verificaTokenOpaco(token, nome, allowlist) {
   const id = await allowlist.buscaValor(token);
   verificaTokenValido(id, nome);
   return id;
+}
+
+async function invalidaTokenOpaco(token, allowlist) {
+  await allowlist.deleta(token);
 }
 
 function verificaTokenEnviado(token, nome) {
@@ -61,6 +69,9 @@ module.exports = {
     },
     verifica(token) {
       return verificaTokenJWT(token, this.nome, this.lista);
+    },
+    invalida(token) {
+      return invalidaTokenJWT(token, this.lista);
     }
   },
 
@@ -73,6 +84,9 @@ module.exports = {
     },
     verifica(token) {
       return verificaTokenOpaco(token, this.nome, this.lista);
+    },
+    invalida(token) {
+      return invalidaTokenOpaco(token, this.lista);
     }
   }
 }
