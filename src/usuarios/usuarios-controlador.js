@@ -2,6 +2,7 @@ const Usuario = require('./usuarios-modelo');
 const { InvalidArgumentError } = require('../erros');
 
 const tokens = require('./tokens');
+const { EmailVerificacao } = require('./emails');
 
 module.exports = {
   async adiciona(req, res) {
@@ -15,6 +16,10 @@ module.exports = {
 
       await usuario.adicionaSenha(senha);
       await usuario.adiciona();
+
+      const endereco = 'localhost:3000/usuario/verifica_email/' + usuario.id;
+      const emailVerificacao = new EmailVerificacao(usuario, endereco);
+      emailVerificacao.enviaEmail().catch(console.log);
 
       res.status(201).json();
     } catch (erro) {
