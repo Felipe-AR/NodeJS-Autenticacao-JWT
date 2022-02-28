@@ -18,5 +18,11 @@ module.exports = app => {
     .post(usuariosControlador.adiciona)
     .get(usuariosControlador.lista);
 
-  app.route('/usuario/:id').delete(middlewaresAutenticacao.bearer, usuariosControlador.deleta);
+  app
+    .route('/usuario/verifica_email/:id')
+    .get(middlewaresAutenticacao.verificaoEmail, usuariosControlador.verificaEmail);
+
+  app
+    .route('/usuario/:id')
+    .delete(middlewaresAutenticacao.bearer, usuariosControlador.deleta);
 };

@@ -25,7 +25,7 @@ class Usuario {
 
   async verificaEmail() {
     this.emailVerificado = true;
-    await usuariosDao.modificaEmailVerificado(usuario, this.emailVerificado);
+    await usuariosDao.modificaEmailVerificado(this, this.emailVerificado);
   }
 
   async adicionaSenha(senha) {
