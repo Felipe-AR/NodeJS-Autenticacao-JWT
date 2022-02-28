@@ -5,7 +5,7 @@ const tokens = require('./tokens');
 const { EmailVerificacao } = require('./emails');
 
 function geraEndereco(rota, id) {
-  const baseURL = process.env.baseURL;
+  const baseURL = process.env.BASE_URL;
   return `${baseURL}${rota}${id}`
 }
 
@@ -23,7 +23,7 @@ module.exports = {
       await usuario.adicionaSenha(senha);
       await usuario.adiciona();
 
-      const endereco = geraEndereco('/usuario/verifica_email', usuario.id);
+      const endereco = geraEndereco('/usuario/verifica_email/', usuario.id);
       const emailVerificacao = new EmailVerificacao(usuario, endereco);
       emailVerificacao.enviaEmail().catch(console.log);
 
@@ -61,6 +61,16 @@ module.exports = {
     try {
       const usuarios = await Usuario.lista();
       res.json(usuarios);
+    } catch (erro) {
+      res.status(500).json({ erro: erro.message });
+    }
+  },
+
+  async verificaEmail(req, res) {
+    try {
+      const usuario = req.user;
+      await usuario.verificaEmail();
+      res.status(200).json();
     } catch (erro) {
       res.status(500).json({ erro: erro.message });
     }
