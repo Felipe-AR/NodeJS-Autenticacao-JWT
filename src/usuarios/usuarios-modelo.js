@@ -23,6 +23,11 @@ class Usuario {
     this.id = id;
   }
 
+  async verificaEmail() {
+    this.emailVerificado = true;
+    await usuariosDao.modificaEmailVerificado(usuario, this.emailVerificado);
+  }
+
   async adicionaSenha(senha) {
     validacoes.campoStringNaoNulo(senha, 'senha');
     validacoes.campoTamanhoMinimo(senha, 'senha', 8);
