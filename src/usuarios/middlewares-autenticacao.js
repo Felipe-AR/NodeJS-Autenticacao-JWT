@@ -70,7 +70,7 @@ module.exports = {
     }
   },
 
-  async verificaoEmail(req, res, next) {
+  async verificacaoEmail(req, res, next) {
     try {
       const { token } = req.params;
       const id = await tokens.verificacaoEmail.verifica(token);
