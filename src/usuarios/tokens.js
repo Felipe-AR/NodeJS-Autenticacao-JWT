@@ -20,6 +20,7 @@ async function criaTokenOpaco(id, [tempoQuantidade, tempoUnidade], allowlist) {
 }
 
 async function verificaTokenNaBlockList(token, nome, blocklist) {
+  if (!blocklist) return;
   const TokenNaBlockList = await blocklist.contemToken(token);
   if (TokenNaBlockList) {
     throw new jwt.JsonWebTokenError(`${nome} por logout!`);
@@ -87,6 +88,17 @@ module.exports = {
     },
     invalida(token) {
       return invalidaTokenOpaco(token, this.lista);
+    }
+  },
+
+  verificacaoEmail: {
+    nome: 'verify e-mail token',
+    expiracao: [5, 'm'],
+    cria(id) {
+      return criaTokenJWT(id, this.expiracao);
+    },
+    verifica(token) {
+      return verificaTokenJWT(token, this.nome);
     }
   }
 }
