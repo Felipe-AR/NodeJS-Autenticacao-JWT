@@ -11,4 +11,4 @@ Esse projeto visa implementar uma aplicação de cadastro de usuários e a inser
 - Nodemailer;
 - Redis;
 
-![Diagrama da Aplicação] (/.github/application-diagram.png)
+![Diagrama da Aplicação](/.github/application-diagram.png)
